@@ -212,34 +212,41 @@ class Map(models.Model):
     )
 
     #Alt, optional. Use if you need post-mod values to be shown.
+    star_rating_alt = models.DecimalField(
+        max_digits=6, 
+        decimal_places=3,
+        blank=True,
+        null=True,
+        verbose_name="Post-mod SR",
+        help_text="The map's star rating after applying mods.")
     cs_alt = models.DecimalField(
         max_digits=5, 
         decimal_places=3,
         blank=True,
         null=True,
         verbose_name="Post-mod CS",
-        help_text="The map's circle size, after applying mods.")
+        help_text="The map's circle size after applying mods.")
     ar_alt = models.DecimalField(
         max_digits=5, 
         decimal_places=3, 
         blank=True,
         null=True,
         verbose_name="Post-mod AR",
-        help_text="The map's approach rate, after applying mods.")
+        help_text="The map's approach rate after applying mods.")
     od_alt = models.DecimalField(
         max_digits=5, 
         decimal_places=3, 
         blank=True,
         null=True,
         verbose_name="Post-mod OD",
-        help_text="The map's overall difficulty, after applying mods.")
+        help_text="The map's overall difficulty after applying mods.")
     hp_alt = models.DecimalField(
         max_digits=5, 
         decimal_places=3,
         blank=True,
         null=True,
         verbose_name="Post-mod HP",
-        help_text="The map's HP drain, after applying mods.")
+        help_text="The map's HP drain after applying mods.")
     duration_alt = models.IntegerField(
         verbose_name="Post-mod drain time",
         help_text = "Map's drain time in seconds.",
