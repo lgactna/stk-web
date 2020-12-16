@@ -187,7 +187,7 @@ class Map(models.Model):
     cs = models.DecimalField(
         max_digits=5, 
         decimal_places=3, 
-        verbose_name="AR",
+        verbose_name="CS",
         help_text="The map's circle size.")
     ar = models.DecimalField(
         max_digits=5, 
@@ -197,12 +197,12 @@ class Map(models.Model):
     od = models.DecimalField(
         max_digits=5, 
         decimal_places=3, 
-        verbose_name="AR",
+        verbose_name="OD",
         help_text="The map's overall difficulty.")
     hp = models.DecimalField(
         max_digits=5, 
         decimal_places=3, 
-        verbose_name="AR",
+        verbose_name="HP",
         help_text="The map's HP drain.")
     duration = models.IntegerField(
         verbose_name="Drain time",
