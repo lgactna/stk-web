@@ -113,10 +113,10 @@ class Score(models.Model):
 
     score = models.IntegerField(help_text="The actual score value.")
     combo = models.IntegerField()
-    accuracy = models.DecimalField(max_digits=10, decimal_places=7) # ###.#######
+    accuracy = models.DecimalField(max_digits=6, decimal_places=3) # ###.#######
     team_total = models.IntegerField(
         help_text="The sum of this player's score and their teammates' scores for this map on that match.")
-    contrib = models.DecimalField(max_digits=10, decimal_places=7)
+    contrib = models.DecimalField(max_digits=6, decimal_places=3)
     count_300 = models.IntegerField(verbose_name="300s")
     count_100 = models.IntegerField(verbose_name="100s")
     count_50 = models.IntegerField(verbose_name="50s")
@@ -185,7 +185,7 @@ class Map(models.Model):
     diff_name = models.CharField(max_length=100)
     creator = models.CharField(max_length=100)
     
-    star_rating = models.DecimalField(max_digits=10, decimal_places=7)
+    star_rating = models.DecimalField(max_digits=6, decimal_places=3)
     cs = models.DecimalField(
         max_digits=5, 
         decimal_places=3, 
@@ -316,6 +316,8 @@ class Match(models.Model):
     #also, related_names are unique columns in a db and so have to be different. we'll just query for both and join when needed.
     team_1 = models.ForeignKey("Team", related_name='matches_1', on_delete=models.SET_NULL, null=True)
     team_2 = models.ForeignKey("Team", related_name='matches_2', on_delete=models.SET_NULL, null=True)
+    score_1 = models.IntegerField(verbose_name='Team 1 Score', blank=True, null=True)
+    score_2 = models.IntegerField(verbose_name='Team 2 Score', blank=True, null=True)
     utc_time = models.DateTimeField(verbose_name="UTC Time", blank=True, null=True)
     referee = models.ForeignKey("Player", related_name="reffed_matches", on_delete=models.SET_NULL, null=True, blank=True)
     streamer = models.ForeignKey("Player", related_name="streamed_matches", on_delete=models.SET_NULL, null=True, blank=True)
