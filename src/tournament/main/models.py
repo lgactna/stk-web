@@ -102,7 +102,6 @@ class Score(models.Model):
     #to keep influencing tournament statistics; same with a team or match
     #so cascade deletes this
     player = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='scores')
-    team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='scores')
     match = models.ForeignKey('Match', on_delete=models.CASCADE, related_name='scores')
     match_index = models.IntegerField(help_text="The index of this score relative to the match, zero-indexed.")
     #maps should normally not be deleted; direct deletion of a map after scores have been added is not allowed
