@@ -214,30 +214,35 @@ class Map(models.Model):
         max_digits=5, 
         decimal_places=3,
         blank=True,
+        null=True,
         verbose_name="Post-mod CS",
         help_text="The map's circle size, after applying mods.")
     ar_alt = models.DecimalField(
         max_digits=5, 
         decimal_places=3, 
         blank=True,
+        null=True,
         verbose_name="Post-mod AR",
         help_text="The map's approach rate, after applying mods.")
     od_alt = models.DecimalField(
         max_digits=5, 
         decimal_places=3, 
         blank=True,
+        null=True,
         verbose_name="Post-mod OD",
         help_text="The map's overall difficulty, after applying mods.")
     hp_alt = models.DecimalField(
         max_digits=5, 
         decimal_places=3,
         blank=True,
+        null=True,
         verbose_name="Post-mod HP",
         help_text="The map's HP drain, after applying mods.")
     duration_alt = models.IntegerField(
         verbose_name="Post-mod drain time",
         help_text = "Map's drain time in seconds.",
-        blank=True
+        blank=True,
+        null=True
     )
 
     def __str__(self):
@@ -309,7 +314,7 @@ class Match(models.Model):
     #also, related_names are unique columns in a db and so have to be different. we'll just query for both and join when needed.
     team_1 = models.ForeignKey("Team", related_name='matches_1', on_delete=models.SET_NULL, null=True)
     team_2 = models.ForeignKey("Team", related_name='matches_2', on_delete=models.SET_NULL, null=True)
-    utc_time = models.DateTimeField(verbose_name="UTC Time", blank=True)
+    utc_time = models.DateTimeField(verbose_name="UTC Time", blank=True, null=True)
     referee = models.ForeignKey("Player", related_name="reffed_matches", on_delete=models.SET_NULL, null=True, blank=True)
     streamer = models.ForeignKey("Player", related_name="streamed_matches", on_delete=models.SET_NULL, null=True, blank=True)
     commentators = models.ManyToManyField("Player", related_name="commentated_matches", blank=True)
@@ -319,12 +324,12 @@ class Match(models.Model):
     match_id = models.CharField(
         max_length=5,
         help_text="The internal match ID of the tournament (usually A1, B1, C2 for GS, 1-infinity for bracket).",
-        blank=True,
         primary_key=True) #MUST be unique on a per-tournament basis.
     mp_id = models.CharField(
         max_length=15,
         help_text="The /mp ID (not the link). Blank until match is made/finished.",
-        blank=True)
+        blank=True,
+        null=True)
     vod_link = models.URLField(verbose_name="Twitch VOD Link")
 
     class Meta:
