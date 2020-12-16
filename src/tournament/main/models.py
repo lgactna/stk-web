@@ -2,6 +2,7 @@ from django.db import models
 
 #consider using ids (numbers) instead of full text names
 from django.urls import reverse
+from django.db.models.functions import Lower
 
 # Create your models here.
 class Player(models.Model):
@@ -21,6 +22,7 @@ class Player(models.Model):
         help_text="The player's osu! username.", 
         verbose_name="osu! username")
     
+    roles = models.ManyToManyField("Role", related_name="players", blank=True)
     is_staff = models.BooleanField(
         help_text="Whether this user is a staff member or not.",
         verbose_name="Player is staff?")
@@ -34,7 +36,7 @@ class Player(models.Model):
 
     #before scores exist, we sort by username on tables and refs
     class Meta:
-        ordering = ['osu_name']
+        ordering = [Lower('osu_name')]
 
     def get_absolute_url(self):
         """Returns the url for this player."""
@@ -43,8 +45,8 @@ class Player(models.Model):
     def __str__(self):
         """String for representing the Model object.
         
-        Returns their osu! ID."""
-        return self.osu_id
+        Returns their osu! username."""
+        return self.osu_name
 
 class Role(models.Model):
     """Model representing a role. 
@@ -330,7 +332,7 @@ class Match(models.Model):
         help_text="The /mp ID (not the link). Blank until match is made/finished.",
         blank=True,
         null=True)
-    vod_link = models.URLField(verbose_name="Twitch VOD Link")
+    vod_link = models.URLField(verbose_name="Twitch VOD Link", blank=True, null=True)
 
     class Meta:
         ordering = ['-utc_time']
@@ -343,7 +345,7 @@ class Match(models.Model):
         """String for representing the Model object.
         
         Returns `Stage - Team 1 vs. Team 2`."""
-        return f"{self.stage} - {team_1.team_name} vs. {team_2.team_name}"
+        return f"{self.stage} - {self.team_1.team_name} vs. {self.team_2.team_name}"
 
 class Stage(models.Model):
     '''Model representing a stage (a group of matches on one weekend under a certain name).
