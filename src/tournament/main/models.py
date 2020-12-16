@@ -1,5 +1,6 @@
 from django.db import models
 
+#consider using ids (numbers) instead of full text names
 from django.urls import reverse
 
 # Create your models here.
@@ -8,7 +9,8 @@ class Player(models.Model):
     
     Relationships to others (a player can have many of these):
     - Role (related_name = "roles")
-    - Score (related_name = "scores)"""
+    - Score (related_name = "scores")
+    - Matches (related_name = "matches" OR "reffed_matches" OR "commentated_matches" OR "streamed_matches") """
     osu_id = models.CharField(
         primary_key=True,
         max_length=10, 
@@ -35,8 +37,8 @@ class Player(models.Model):
         ordering = ['osu_name']
 
     def get_absolute_url(self):
-        """Returns the url to access a particular author instance."""
-        return reverse('player-detail', args=[str(self.osu_name)])
+        """Returns the url for this player."""
+        return reverse('player-detail', args=[str(self.osu_id)])
 
     def __str__(self):
         """String for representing the Model object.
@@ -72,7 +74,7 @@ class Team(models.Model):
     
     Relationships to others (a team can have many of these):
     - Player (related_name = "players")
-    - Match (related_name = "matches)
+    - Match (related_name = "matches_1" AND "matches_2") (not sure how to join, but just query both)
     """
     team_name = models.CharField(max_length=100)
 
@@ -85,6 +87,10 @@ class Team(models.Model):
         
         Returns the team name."""
         return self.team_name
+    
+    def get_absolute_url(self):
+        """Returns the url of this individual team."""
+        return reverse('mappool-detail', args=[str(self.team_name)])
 
 class Score(models.Model):
     """Model representing a score."""
@@ -146,7 +152,7 @@ class Map(models.Model):
         help_text="The set ID for this map, as in osu.ppy.sh/s/<id>",
         verbose_name="Beatmap Set ID")
 
-    pool = models.ForeignKey("Mappool", on_delete=models.CASCADE, related_name='maps')
+    mappool = models.ForeignKey("Mappool", on_delete=models.CASCADE, related_name='maps')
     
     pool_id = models.CharField(
         max_length=5, #i hope you don't have anything more than NM999
@@ -240,6 +246,10 @@ class Map(models.Model):
         Returns `Artist - Title [Difficulty] (Mapper).`"""
         return f"{self.artist} - {self.title} [{self.diff_name}] ({self.creator})"
 
+    def get_absolute_url(self):
+        """Returns the url of this individual map."""
+        return reverse('map-detail', args=[str(self.diff_id)])
+
     def long_name(self):
         """Longer string representation of a map.
         
@@ -247,4 +257,112 @@ class Map(models.Model):
         Returns `Mappool stage/name, pool ID: Artist - Title [Difficulty] (set creator).`"""
         return f"{self.pool}, {self.pool_id}: {self.artist} - {self.title} [{self.diff_name}] ({self.creator})"
 
+class Mappool(models.Model):
+    '''Model representing a mappool.
+    
+    A mappool can have many of these:
+    - Map (related_name = "maps")
+    - Match (related_name = "matches")'''
 
+    display_order = models.IntegerField(
+        help_text="What index this pool is, unique. Pools are ordered highest first.", 
+        primary_key=True)
+    mappool_name = models.CharField(
+        max_length=100,
+        help_text="The full name of this mappool (as in Grand Finals).")
+    short_name = models.CharField(
+        max_length=10,
+        help_text="The shorthand name for this mappool (as in SF, Ro32, etc.)")
+    display_color = models.CharField(
+        max_length=9,
+        help_text="RGBA hex (as #RRGGBBAA), webpage-compatible."
+    )
+
+    class Meta:
+        ordering = ['-display_order']
+
+    def get_absolute_url(self):
+        """Returns the url of this individual mappool."""
+        return reverse('mappool-detail', args=[str(self.short_name)])
+
+    def __str__(self):
+        """String for representing the Model object.
+        
+        Returns the mappool name."""
+        return self.mappool_name
+
+class Match(models.Model):
+    '''Model representing a match.
+    
+    Has:
+    - ForeignKey relationship with two teams (one ForeignKey each)
+    - ForeignKey relationship with one player, serving as the referee
+    - ForeignKey relationship with one player, serving as the streamer
+    - ManyToMany relationship with other players, serving as the commentators
+    - ForeignKey relationsip with one mappool
+    - ForeignKey relationship with one stage
+
+    A match can have many of these:
+    - Score (related_name = "scores")'''
+    
+    #matches shouldn't die if a team is deleted, so this is nullable
+    #also, related_names are unique columns in a db and so have to be different. we'll just query for both and join when needed.
+    team_1 = models.ForeignKey("Team", related_name='matches_1', on_delete=models.SET_NULL, null=True)
+    team_2 = models.ForeignKey("Team", related_name='matches_2', on_delete=models.SET_NULL, null=True)
+    utc_time = models.DateTimeField(verbose_name="UTC Time", blank=True)
+    referee = models.ForeignKey("Player", related_name="reffed_matches", on_delete=models.SET_NULL, null=True, blank=True)
+    streamer = models.ForeignKey("Player", related_name="streamed_matches", on_delete=models.SET_NULL, null=True, blank=True)
+    commentators = models.ManyToManyField("Player", related_name="commentated_matches", blank=True)
+    mappool = models.ForeignKey("Mappool", related_name='matches', on_delete=models.SET_NULL, null=True, blank=True)
+    stage = models.ForeignKey("Stage", related_name='matches', on_delete=models.SET_NULL, null=True, blank=True)
+
+    match_id = models.CharField(
+        max_length=5,
+        help_text="The internal match ID of the tournament (usually A1, B1, C2 for GS, 1-infinity for bracket).",
+        blank=True,
+        primary_key=True) #MUST be unique on a per-tournament basis.
+    mp_id = models.CharField(
+        max_length=15,
+        help_text="The /mp ID (not the link). Blank until match is made/finished.",
+        blank=True)
+    vod_link = models.URLField(verbose_name="Twitch VOD Link")
+
+    class Meta:
+        ordering = ['-utc_time']
+
+    def get_absolute_url(self):
+        """Returns the url of this individual mappool."""
+        return reverse('match-detail', args=[str(self.match_id)])
+
+    def __str__(self):
+        """String for representing the Model object.
+        
+        Returns `Stage - Team 1 vs. Team 2`."""
+        return f"{self.stage} - {team_1.team_name} vs. {team_2.team_name}"
+
+class Stage(models.Model):
+    '''Model representing a stage (a group of matches on one weekend under a certain name).
+    
+    A stage can have many of these:
+    - Match (related_name = "matches")'''
+
+    stage_name = models.CharField(
+        max_length=50,
+        help_text='The stage of this tournament. Usually something like "Semifinals" or "Group Stages". '
+                  'Stages occurring over different weekends should be separated, as in "Group Stages - Week 2".',
+        primary_key=True) #MUST be unique on a per-tournament basis.
+    date_display = models.CharField(
+        max_length=50,
+        help_text='The date text to display underneath the stage name, as in "Sep. 14 - Sep. 15". Has no validation.',
+        blank=True)
+    long_info = models.TextField(max_length=1000, help_text='Enter any special rules for this weekend.', blank=True)
+
+    def get_absolute_url(self):
+        """Returns the url of this individual mappool."""
+        return reverse('stage-detail', args=[str(self.stage_name)])
+
+    def __str__(self):
+        """String for representing the Model object.
+
+        Returns the stage name."""
+        return f"{self.stage_name}"
