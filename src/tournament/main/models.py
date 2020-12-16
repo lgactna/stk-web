@@ -253,6 +253,9 @@ class Map(models.Model):
         null=True
     )
 
+    class Meta:
+        ordering = ['mappool', 'pool_id']
+
     def __str__(self):
         """String representation of a map.
         
