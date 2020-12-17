@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Player: {{ player.osu_name }}</h1>
+
+  <p><strong>ID:</strong> <a href="">{{ player.osu_id }}</a></p> <!-- author detail link not yet defined -->
+  <p><strong>Roles:</strong> {{ player.roles }}</p>
+  <p><strong>Is staff:</strong> {{ player.is_staff }}</p>
+
+  <div style="margin-left:20px;margin-top:20px">
+    <h4>Copies</h4>
+
+    {% for score in player.scores.all %}
+      <hr>
+      <p>
+        {{ score }}
+      </p>
+    {% endfor %}
+  </div>
+{% endblock %}
