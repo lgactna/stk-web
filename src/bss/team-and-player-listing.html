@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>tourney</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Exo+2">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body style="background: rgb(37,36,36);">
+    <nav class="navbar navbar-dark navbar-expand-lg fixed-top bg-white portfolio-navbar gradient" style="background: black!important;font-family: ABeeZee, sans-serif;">
+        <div class="container"><a class="navbar-brand logo" href="#">fade to right</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navbarNav"><span class="sr-only">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="projects-grid-cards.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="projects-grid-cards.html">Teams</a></li>
+                    <li class="nav-item"><a class="nav-link" href="projects-grid-cards.html">Scores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="cv.html">Schedule</a></li>
+                    <li class="nav-item"><a class="nav-link" href="hire-me.html">Pools</a></li>
+                    <li class="nav-item d-flex justify-content-start no-arrow">
+                        <div class="navbar-divider" style="border-left: 1px solid rgb(255,255,255,0.5);margin-right: 8px;height: 25px;margin-top: 8px;margin-left: 8px;"></div>
+                        <div class="nav-item dropdown"><a class="dropdown-toggle nav-link" data-toggle="dropdown" aria-expanded="false" href="#" style="padding-bottom: 0px;padding-top: 5px;"><span style="margin-right: 9px;">poke_player</span><img class="rounded-circle" style="height: 32px;width: 32px;" src="https://a.ppy.sh/6502279"></a>
+                            <div class="dropdown-menu" style="background: black;/*color: white!important;*/"><a class="dropdown-item" href="#">Profile</a><a class="dropdown-item" href="#">Settings</a><a class="dropdown-item" href="#">Log out</a></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main style="font-family: ABeeZee, sans-serif;color: white;background: url(&quot;assets/img/768px-Osu-triangles.svg.png&quot;), rgba(0,0,0,0.8);background-size: 512px, auto;">
+        <section style="margin-top: 30px;">
+            <div class="container">
+                <div class="white-links" style="background-color: rgba(0,0,0,0.52);padding: 15px;border-radius: 5px;">
+                    <h3 class="text-center text-lg-left text-xl-left" style="border-bottom-width: 1px;border-bottom-style: solid;">Player Listing</h3>
+                    <div id="team-table-container" style="overflow: auto;">
+                        <div class="table-bordered text-center" style="font-size: 0.8rem;border-width: 0px;border-left-width: 0px;width: 1080px;">
+                            <table class="table table-striped table-bordered table-hover table-dark table-sm" id="score-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;">#</th>
+                                        <th style="width: 45px;">Flag</th>
+                                        <th style="width: 160px;">Player</th>
+                                        <th>Team</th>
+                                        <th style="width: 170px;">Discord</th>
+                                        <th style="width: 75px;">pp</th>
+                                        <th style="width: 75px;">Rank</th>
+                                        <th style="width: 100px;">Avg. Score</th>
+                                        <th style="width: 80px;">Avg. Acc</th>
+                                        <th style="width: 80px;">Avg. Contrib</th>
+                                        <th style="width: 75px;">WR</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="/*vertical-align: middle;*/">
+                                        <td class="header">1</td>
+                                        <td>Cell 2</td>
+                                        <td>Tag404MathClass2+3=9<br></td>
+                                        <td style="width: 135px;">Long Player name</td>
+                                        <td>#134,232</td>
+                                        <td>4,535pp</td>
+                                        <td>Cell 6</td>
+                                        <td>999,999.99</td>
+                                        <td>100.00%</td>
+                                        <td class="score-map-name">100.00%</td>
+                                        <td>134,242</td>
+                                    </tr>
+                                    <tr style="/*vertical-align: middle;*/">
+                                        <td class="header">2</td>
+                                        <td>Cell 2</td>
+                                        <td>HR</td>
+                                        <td><span>Long player name</span></td>
+                                        <td>Cell 4</td>
+                                        <td>Cell</td>
+                                        <td>Cell 6</td>
+                                        <td>e</td>
+                                        <td>Cell 9</td>
+                                        <td class="score-map-name"></td>
+                                        <td>23,462</td>
+                                    </tr>
+                                    <tr style="/*vertical-align: middle;*/">
+                                        <td class="header">3</td>
+                                        <td>Cell 2</td>
+                                        <td>HD</td>
+                                        <td><span>Long player name</span></td>
+                                        <td>Cell 4</td>
+                                        <td>Cell</td>
+                                        <td>Cell 6</td>
+                                        <td>e</td>
+                                        <td>Cell 9</td>
+                                        <td class="score-map-name">
+                                            <div></div>
+                                        </td>
+                                        <td>23,123</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section style="margin-top: 30px;">
+            <div class="container">
+                <div class="white-links" style="background-color: rgba(0,0,0,0.52);padding: 15px;border-radius: 5px;">
+                    <h3 class="text-center text-lg-left text-xl-left" style="border-bottom-width: 1px;border-bottom-style: solid;">Team Listing</h3>
+                    <div id="team-table-container-2" style="overflow: auto;">
+                        <div class="table-bordered text-center" style="font-size: 0.8rem;border-width: 0px;border-left-width: 0px;width: 1080px;">
+                            <table class="table table-striped table-bordered table-hover table-dark table-sm" id="score-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;">#</th>
+                                        <th style="width: 135px;">Team</th>
+                                        <th style="width: 160px;">Captain</th>
+                                        <th style="width: 75px;">Rank</th>
+                                        <th style="width: 160px;">Player 2</th>
+                                        <th style="width: 75px;">Rank</th>
+                                        <th style="width: 160px;">Player 3</th>
+                                        <th style="width: 75px;">Rank</th>
+                                        <th style="width: 75px;">Avg. Rank</th>
+                                        <th style="width: 75px;">Avg. Score</th>
+                                        <th style="width: 75px;">Avg. Acc</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="/*vertical-align: middle;*/">
+                                        <td class="header">1</td>
+                                        <td>Tag404MathClass2+3=9<br></td>
+                                        <td>Long player name</td>
+                                        <td>#134,232</td>
+                                        <td>Long player name<a href="#"></a></td>
+                                        <td>Cell 6</td>
+                                        <td>Player name long</td>
+                                        <td>Cell 9</td>
+                                        <td class="score-map-name"></td>
+                                        <td>134,242</td>
+                                        <td>100.00%</td>
+                                    </tr>
+                                    <tr style="/*vertical-align: middle;*/">
+                                        <td class="header">2</td>
+                                        <td>HR</td>
+                                        <td></td>
+                                        <td>Cell 4</td>
+                                        <td>Long player name</td>
+                                        <td>Cell 6</td>
+                                        <td>Cell 9</td>
+                                        <td class="score-map-name"></td>
+                                        <td>23,462</td>
+                                        <td>82.34%</td>
+                                    </tr>
+                                    <tr style="/*vertical-align: middle;*/">
+                                        <td class="header">3</td>
+                                        <td>HD</td>
+                                        <td></td>
+                                        <td>Cell 4</td>
+                                        <td>Long layer name<a href="#"></a></td>
+                                        <td>Cell 6</td>
+                                        <td>peko peko peko peko</td>
+                                        <td>Cell 9</td>
+                                        <td class="score-map-name">
+                                            <div></div>
+                                        </td>
+                                        <td>23,123</td>
+                                        <td>18.34%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section style="margin-top: 30px;">
+            <div class="container">
+                <div class="white-links" style="background-color: rgba(0,0,0,0.52);padding: 15px;border-radius: 5px;">
+                    <h3 class="text-center text-lg-left text-xl-left" style="border-bottom-width: 1px;border-bottom-style: solid;">Staff Listing</h3>
+                    <div id="team-table-container-1" style="overflow: auto;">
+                        <div class="table-bordered text-center" style="font-size: 0.8rem;border-width: 0px;border-left-width: 0px;width: 1080px;">
+                            <table class="table table-striped table-bordered table-hover table-dark table-sm" id="score-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px;">#</th>
+                                        <th style="width: 45px;">Flag</th>
+                                        <th style="width: 135px;">Player</th>
+                                        <th style="width: 175px;">Discord</th>
+                                        <th style="width: 75px;">pp</th>
+                                        <th style="width: 75px;">Rank</th>
+                                        <th>Roles</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="/*vertical-align: middle;*/">
+                                        <td class="header">1</td>
+                                        <td></td>
+                                        <td>Tag404MathClass2+3=9<br></td>
+                                        <td style="width: 135px;"></td>
+                                        <td>#134,232</td>
+                                        <td></td>
+                                        <td>Player name long</td>
+                                    </tr>
+                                    <tr style="/*vertical-align: middle;*/">
+                                        <td class="header">2</td>
+                                        <td></td>
+                                        <td>HR</td>
+                                        <td><span>Long player name</span></td>
+                                        <td>Cell 4</td>
+                                        <td></td>
+                                        <td>Namer long Player</td>
+                                    </tr>
+                                    <tr style="/*vertical-align: middle;*/">
+                                        <td class="header">3</td>
+                                        <td></td>
+                                        <td>HD</td>
+                                        <td><span>Long player name</span></td>
+                                        <td>Cell 4</td>
+                                        <td><a href="#"></a></td>
+                                        <td>peko peko peko peko</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="assets/js/temp-data.js"></script>
+    <script src="assets/js/utils.js"></script>
+</body>
+
+</html>

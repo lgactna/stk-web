@@ -1,0 +1,364 @@
+/* body-wide colors */
+
+body {
+  --nm-1: 201, 218, 248;
+  --nm-2: 109, 158, 235;
+  --nm-3: 84, 141, 233;
+  --hd-1: 255, 242, 204;
+  --hd-2: 255, 217, 102;
+  --hd-3: 250, 205, 71;
+  --hr-1: 244, 204, 204;
+  --hr-2: 224, 102, 102;
+  --hr-3: 226, 71, 71;
+  --dt-1: 217, 210, 233;
+  --dt-2: 142, 124, 195;
+  --dt-3: 120, 94, 197;
+  --fm-1: 217, 234, 211;
+  --fm-2: 148, 197, 125;
+  --fm-3: 128, 199, 95;
+  --tb-1: 162, 196, 201;
+  --tb-2: 69, 129, 142;
+}
+
+/* navbar stuff probably */
+
+.dropdown-item:focus, .dropdown-item:hover {
+  color: white;
+  text-decoration: none;
+  background-color: rgb(50,48,48);
+}
+
+.dropdown-item.active, .dropdown-item:active {
+  text-decoration: none;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: .25rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: white;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+}
+
+@media (max-width: 991px) {
+  .navbar-divider {
+    display: none;
+  }
+}
+
+main {
+  padding-top: 64px;
+}
+
+@media (min-width: 576px) {
+  main {
+    padding-top: 5.5rem;
+  }
+}
+
+/* css for copy-on-click; needs to be used with jQuery .click() */
+
+.copy-hover-white {
+  transition: color 0.5s ease;
+  color: rgba(255,255,255,0.4);
+}
+
+.copy-hover-white:hover {
+  cursor: pointer;
+  color: rgba(255,255,255,1);
+}
+
+.beatmap-id.copy-hover-black {
+  transition: color 0.5s ease;
+  color: rgba(0,0,0,0.4);
+}
+
+.copy-hover-black:hover {
+  cursor: pointer;
+  color: rgba(0,0,0,1);
+}
+
+/* various stupid table stuff; includes definitions for mod classes */
+
+td a i.disabled {
+  color: rgb(119,119,119);
+}
+
+td a i {
+  color: rgb(255,255,255);
+}
+
+td a {
+  text-decoration: none;
+  color: white;
+}
+
+td a:hover {
+  text-decoration: underline;
+  color: white;
+}
+
+td.banner-container {
+  padding: 0;
+}
+
+td.banner-container img {
+  max-width: 109.5px;
+}
+
+.mappool-body td, .score-body td {
+  vertical-align: middle;
+}
+
+.mappool-body td a, .mappool-body td, .score-body td a, .score-body td {
+  color: black;
+}
+
+.row-nm td, .nm {
+  background-color: rgb(var(--nm-1));
+}
+
+.row-nm .header, .nm:hover {
+  background-color: rgb(var(--nm-2));
+}
+
+.row-hd td, .hd {
+  background-color: rgb(var(--hd-1));
+}
+
+.row-hd .header, .hd:hover {
+  background-color: rgb(var(--hd-2));
+}
+
+.row-hr td, .hr {
+  background-color: rgb(var(--hr-1));
+}
+
+.row-hr .header, .hr:hover {
+  background-color: rgb(var(--hr-2));
+}
+
+.row-dt td, .dt {
+  background-color: rgb(var(--dt-1));
+}
+
+.row-dt .header, .dt:hover {
+  background-color: rgb(var(--dt-2));
+}
+
+.row-fm td, .fm {
+  background-color: rgb(var(--fm-1));
+}
+
+.row-fm .header, .fm:hover {
+  background-color: rgb(var(--fm-2));
+}
+
+.row-tb td, .tb {
+  background-color: rgb(var(--tb-1));
+}
+
+.row-tb .header, .tb:hover {
+  background-color: rgb(var(--tb-2));
+  color: white;
+}
+
+.match-body tr.forfeited {
+  background-color: rgba(255,0,0,0.25)!important;
+}
+
+tbody.match-body tr.forfeited:hover {
+  background-color: rgba(255,0,0,0.50)!important;
+}
+
+.white-links a {
+  text-decoration: none;
+  color: white;
+}
+
+.white-links a:hover {
+  text-decoration: underline;
+}
+
+/* profile page css */
+
+#other-info .img-cell {
+  padding: 0 .75rem;
+  text-align: center;
+}
+
+#other-info .img-cell img {
+  border-radius: 6px;
+}
+
+#other-info .link-cell {
+  padding: 0 .75rem;
+  text-align: left;
+}
+
+.general-stats-table td, .general-stats-table-xs td {
+  padding: .25rem .5rem;
+}
+
+@media (max-width: 576px) {
+  .general-stats-table-xs {
+    display: block;
+  }
+}
+
+@media (max-width: 576px) {
+  .general-stats-table {
+    display: none;
+  }
+}
+
+@media (min-width: 576px) {
+  .general-stats-table-xs {
+    display: none;
+  }
+}
+
+@media (min-width: 576px) {
+  .general-stats-table {
+    display: block;
+  }
+}
+
+#extra-tags span.badge {
+  margin-right: 10px;
+}
+
+.row-header {
+  width: 1px;
+  white-space: nowrap;
+}
+
+/* magic mod filter button stuff */
+
+.nm.btn-primary:not(:disabled):not(.disabled).active:focus, .nm.btn-primary:not(:disabled):not(.disabled):active:focus, .show > .nm.btn-primary.dropdown-toggle:focus, .fm.btn-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba(var(--nm-2),0.5);
+}
+
+.nm.btn-primary:focus {
+  color: #fff;
+  background-color: rgb(var(--nm-2));
+  border-color: rgb(var(--nm-1));
+}
+
+.nm.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: rgb(var(--nm-3));
+}
+
+.hd.btn-primary:not(:disabled):not(.disabled).active:focus, .hd.btn-primary:not(:disabled):not(.disabled):active:focus, .show > .hd.btn-primary.dropdown-toggle:focus, .fm.btn-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba(var(--hd-2),0.5);
+}
+
+.hd.btn-primary:focus {
+  color: #fff;
+  background-color: rgb(var(--hd-2));
+  border-color: rgb(var(--hd-1));
+}
+
+.hd.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: rgb(var(--hd-3));
+}
+
+.hr.btn-primary:not(:disabled):not(.disabled).active:focus, .hr.btn-primary:not(:disabled):not(.disabled):active:focus, .show > .hr.btn-primary.dropdown-toggle:focus, .fm.btn-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba(var(--hr-2),0.5);
+}
+
+.hr.btn-primary:focus {
+  color: #fff;
+  background-color: rgb(var(--hr-2));
+  border-color: rgb(var(--hr-1));
+}
+
+.hr.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: rgb(var(--hr-3));
+}
+
+.dt.btn-primary:not(:disabled):not(.disabled).active:focus, .dt.btn-primary:not(:disabled):not(.disabled):active:focus, .show > .dt.btn-primary.dropdown-toggle:focus, .fm.btn-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba(var(--dt-2),0.5);
+}
+
+.dt.btn-primary:focus {
+  color: #fff;
+  background-color: rgb(var(--dt-2));
+  border-color: rgb(var(--dt-1));
+}
+
+.dt.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: rgb(var(--dt-3));
+}
+
+.fm.btn-primary:not(:disabled):not(.disabled).active:focus, .fm.btn-primary:not(:disabled):not(.disabled):active:focus, .show > .fm.btn-primary.dropdown-toggle:focus, .fm.btn-primary:focus {
+  box-shadow: 0 0 0 .2rem rgba(var(--fm-2),0.5);
+}
+
+.fm.btn-primary:focus {
+  color: #fff;
+  background-color: rgb(var(--fm-2));
+  border-color: rgb(var(--fm-1));
+}
+
+.fm.btn-primary:not(:disabled):not(.disabled):active {
+  background-color: rgb(var(--fm-3));
+}
+
+.mappool-map-name div {
+  width: 674px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-listing .mappool-map-name div {
+  width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* responsive score table things */
+
+#player-score-table .score-map-name div {
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 576px) {
+  #player-score-table .score-map-name div {
+    width: 300px;
+  }
+}
+
+@media (min-width: 768px) {
+  #player-score-table .score-map-name div {
+    width: 340px;
+  }
+}
+
+@media (min-width: 1200px) {
+  #player-score-table .score-map-name div {
+    width: 480px;
+  }
+}
+
+#team-score-table .score-map-name div {
+  width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.player-name-div {
+  width: 150px;
+}
+
