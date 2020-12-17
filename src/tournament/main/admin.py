@@ -18,11 +18,45 @@ class PlayerAdmin(admin.ModelAdmin):
     list_display = ('osu_id', 'osu_name', 'team')
     list_filter = ('team', 'roles')
 
+    fieldsets = (
+        ('osu! info', {
+            'fields': (('osu_id', 'osu_name'), 
+                       ('country', 'country_code'))
+        }),
+        ('Tournament details', {
+            'fields': ('team', 'roles', 'is_staff', 'discord_name', 'utc_offset')
+        }),
+        ('osu! statistics', {
+            'fields': ('osu_rank', 'osu_pp'),
+            'description': 'These are (well, should be) updated automatically every so often. '
+                           'You shouldn\'t need to update these manually.'
+        }),
+        ('Tournament statistics', {
+            'fields': (('average_score', "score_rank"),
+                       ('average_acc', "acc_rank"),
+                       ('average_contrib', 'contrib_rank')),
+            'description': 'These are (well, should be) updated automatically every so often. '
+                           'You shouldn\'t need to update these manually.'
+        }),
+    )
+
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('team_name', 'get_players')
 
-    #note: this is likely creating a query on each
+    fieldsets = (
+        (None, {
+            'fields': ('team_name',)
+        }),
+        ('Tournament statistics', {
+            'fields': (('average_score', "score_rank"),
+                       ('average_acc', "acc_rank")),
+            'description': 'These are (well, should be) updated automatically every so often. '
+                           'You shouldn\'t need to update these manually.'
+        }),
+    )
+
+    #note: this is likely creating a billion queries for each team
     #there is almost certainly a better way
     #https://stackoverflow.com/questions/38827608/get-list-display-in-django-admin-to-display-the-many-end-of-a-many-to-one-rela?
     def get_players(self, obj):
