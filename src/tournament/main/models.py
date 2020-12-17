@@ -128,8 +128,8 @@ class Score(models.Model):
         """String representation of a score.
         
         osugame style, no idea why you'd need this"""
-        full = (f'{self.player.osu_name} | {self.map} ({self.map.creator} | '
-                f'{self.map.star_rating}*) {self.accuracy} {self.combo}/{self.map.max_combo}')
+        full = (f'{self.player.osu_name} | {self.map} ('
+                f'{self.map.star_rating}*) {self.accuracy}% {self.combo}/{self.map.max_combo}x')
         return full
 
 class Map(models.Model):
