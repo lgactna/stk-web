@@ -37,15 +37,28 @@ class TeamAdmin(admin.ModelAdmin):
 class MapAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'mappool', 'pool_id')
     list_filter = ('mappool', 'map_type')
-    fields = [
-        ('diff_id', 'set_id'), 
-        ('artist', 'title', 'diff_name'),
-        'creator',
-        ('mappool', 'pool_id', 'map_type'), 
-        ('star_rating', 'duration'),
-        ('cs', 'ar', 'od', 'hp'),
-        ('star_rating_alt', 'duration_alt'),
-        ('cs_alt', 'ar_alt', 'od_alt', 'hp_alt'),]
+    
+    fieldsets = (
+        ('Beatmap Info', {
+            'fields': (('diff_id', 'set_id'), 
+                       ('artist', 'title', 'diff_name','creator'))
+        }),
+        ('Pooling', {
+            'fields': ('mappool', 'pool_id', 'map_type')
+        }),
+        ('Meta values', {
+            'fields': (('star_rating', 'duration'),
+                       ('cs', 'ar', 'od', 'hp')),
+            'description': 'You can choose to not use the optional post-mod fields '
+                           'below if you don\'t need or want separate rendering for them. '
+                           'In that case, put the post-mod values below. '
+                           'Just make sure to stay consistent across every map.'
+        }),
+        ('Post-mod meta values', {
+            'fields': (('star_rating_alt', 'duration_alt'),
+                       ('cs_alt', 'ar_alt', 'od_alt', 'hp_alt'))
+        }),
+    )
 
 @admin.register(Score)
 class ScoreAdmin(admin.ModelAdmin):
