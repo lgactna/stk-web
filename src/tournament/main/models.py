@@ -183,6 +183,8 @@ class Map(models.Model):
     title = models.CharField(max_length=100)
     diff_name = models.CharField(max_length=100)
     creator = models.CharField(max_length=100)
+
+    max_combo = models.IntegerField()
     
     star_rating = models.DecimalField(max_digits=6, decimal_places=3)
     cs = models.DecimalField(
