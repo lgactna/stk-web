@@ -21,11 +21,42 @@ class Player(models.Model):
         max_length=30,
         help_text="The player's osu! username.", 
         verbose_name="osu! username")
-    
+    #these are fixed but very long
+    #in the future, it might be a good idea to use a onetoone relation with a separate country field
+    #so these aren't separate
+    country = models.CharField(
+        max_length=30,
+        help_text="The full name of this user's country.",
+        default="Everywhere"
+    )
+    country_code = models.CharField(
+        max_length=2,
+        help_text="The flag code of this user's country. See https://github.com/ppy/osu-resources/tree/master/osu.Game.Resources/Textures/Flags.",
+        default="__" #see related asset in link above
+    )
+    osu_rank = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name="osu! rank",
+        help_text="This user's osu! rank. Updated ~daily-hourly via celery, shouldn't need to be manual."
+    )
+    osu_pp = models.DecimalField(
+        blank=True,
+        null=True,
+        max_digits=8,
+        decimal_places=3,
+        verbose_name="osu! pp",
+        help_text="This user's osu! pp. Automated with rank updates."
+    )
+
     roles = models.ManyToManyField("Role", related_name="players", blank=True)
     is_staff = models.BooleanField(
         help_text="Whether this user is a staff member or not.",
         verbose_name="Player is staff?")
+    utc_offset = models.IntegerField(
+        default=0
+    )
+
     #in the future, we might make connections to a discord bot
     #but for now, we only store username#discriminator
     discord_name = models.CharField(max_length=100, help_text="The player's Discord tag (with discriminator).")
@@ -33,6 +64,40 @@ class Player(models.Model):
     #if a team is deleted, then this field is nulled
     #on a team instance, you would call team.players.all()
     team = models.ForeignKey('Team', on_delete=models.SET_NULL, null=True, related_name='players')
+
+    #these need to be separated on the admin dashboard, should never be manually edited
+    #(in theory)
+    #ranks are NULL by default to denote "unranked"
+    average_acc = models.DecimalField(
+        max_digits=10,
+        decimal_places=3,
+        blank=True,
+        null=True
+    )
+    acc_rank = models.IntegerField(
+        blank=True,
+        null=True
+    )
+    average_score = models.DecimalField(
+        max_digits=10,
+        decimal_places=3,
+        blank=True,
+        null=True
+    )
+    score_rank = models.IntegerField(
+        blank=True,
+        null=True
+    )
+    average_contrib = models.DecimalField(
+        max_digits=10,
+        decimal_places=3,
+        blank=True,
+        null=True
+    )
+    contrib_rank = models.IntegerField(
+        blank=True,
+        null=True
+    )
 
     #before scores exist, we sort by username on tables and refs
     class Meta:
@@ -79,6 +144,27 @@ class Team(models.Model):
     - Match (related_name = "matches_1" AND "matches_2") (not sure how to join, but just query both)
     """
     team_name = models.CharField(max_length=100)
+
+    average_acc = models.DecimalField(
+        max_digits=10,
+        decimal_places=3,
+        blank=True,
+        null=True
+    )
+    acc_rank = models.IntegerField(
+        blank=True,
+        null=True
+    )
+    average_score = models.DecimalField(
+        max_digits=10,
+        decimal_places=3,
+        blank=True,
+        null=True
+    )
+    score_rank = models.IntegerField(
+        blank=True,
+        null=True
+    )
 
     #before scores exist, we sort by team name on tables and refs
     class Meta:
