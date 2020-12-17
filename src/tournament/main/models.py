@@ -54,8 +54,12 @@ class Player(models.Model):
         help_text="Whether this user is a staff member or not.",
         verbose_name="Player is staff?")
     utc_offset = models.IntegerField(
-        default=0
-    )
+        default=0,
+        help_text="This player's UTC offset. If a player is UTC-8, put -8 here. "
+                  "Note that this doesn't update automatically for DST switches! "
+                  "If this field is used for easy time conversions, make sure the players keep this accurate!",
+        verbose_name="UTC offset"
+    ) #This is the offset, not "UTC-8" because then it'd be a little harder to use it lol
 
     #in the future, we might make connections to a discord bot
     #but for now, we only store username#discriminator
