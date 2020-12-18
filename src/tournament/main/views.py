@@ -2,8 +2,8 @@ from django.shortcuts import render
 
 from django.views import generic
 from django.http import Http404
-from django.db.models import Avg, F, Window
-from django.db.models.functions import Rank
+from django.db.models import Avg, OuterRef, Subquery, F, Window
+from django.db.models.functions import Rank, RowNumber
 
 from main.models import Player, Team, Map, Mappool
 
@@ -14,44 +14,54 @@ def index(request):
     # Generate counts of some of the main objects
     num_players = Player.objects.all().count()
 
-    y = Player.objects.annotate(
-        rank=Window(
-            expression=Avg('scores__score')
-        )
+    Player.objects.update( 
+        average_score=Subquery( 
+            Player.objects.filter( 
+                osu_id=OuterRef('osu_id') 
+            ).annotate( 
+                avg_score=Avg('scores__score') 
+            ).values('avg_score')[:1] 
+        ) 
+    )
+    '''
+    s_rank = Window(
+        expression=Rank(), 
+        order_by=F('average_score').desc(),
+        partition_by=[F('osu_id')]
+    )
+    '''
+    qs = Subquery(Player.objects
+    .filter(osu_id=OuterRef('osu_id'))
+    .annotate(average=Avg('scores__score'))
+    .order_by('-average')
+    .annotate(rank = Window(expression=RowNumber()))
+    .values('rank')[:1]
     )
 
+    print(qs)
+
+    
+    Player.objects.update( 
+        score_rank=qs 
+    )
+    
+    #p = Player.objects.order_by('-average_score').annotate(rank=Window(expression=RowNumber()))
+    #print(p.values('rank')[:1])
+    
     '''
-    tomorrow:
-
-    Try doing an aggregate and then an annotation, in that order.
-     
-    The first is to establish the average for each player.
-    player_avg = player.scores.all().aggregate(Avg('score'))
-    It looks like this can be done using an annotation as well.
-
-    Then we annotate the rank of that average using the things found here:
+    for p in Player.objects.annotate():
+        p.score_rank = None
+        p.save()
+    '''
+    '''
     https://stackoverflow.com/questions/55260238/django-orm-create-ranking-based-on-related-model-count
     https://docs.djangoproject.com/en/2.2/topics/db/aggregation/
-
-    Maybe it's even possible to combine annotations, as in
-
-    rank = Window(
-        expression=Rank(),
-        order_by=F('average_score').desc()
-    )
-
-    qs = Player.objects.annotate(average_score=Avg('scores__score')).annotate(rank=rank)
-    then maybe we iterate over the queryset and assign???
-
-    see https://stackoverflow.com/questions/3652736/django-update-queryset-with-annotation
+    https://stackoverflow.com/questions/3652736/django-update-queryset-with-annotation
+    https://stackoverflow.com/questions/35781669/clean-way-to-use-postgresql-window-functions-in-django-orm
     '''
 
-    for player in y:
-        print(player.rank)
-
     context = {
-        'num_players': num_players,
-        'y': y
+        'num_players': num_players
     }
 
     # Render the HTML template index.html with the data in the context variable
@@ -65,4 +75,4 @@ def player_detail_view(request, pk):
 
     player_avg = player.scores.all().aggregate(Avg('score'))
 
-    return render(request, 'main/player_detail.html', context={'player': player, 'player_avg': player_avg, 'test': test})
+    return render(request, 'main/player_detail.html', context={'player': player, 'player_avg': player_avg})

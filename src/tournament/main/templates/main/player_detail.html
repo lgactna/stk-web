@@ -6,8 +6,9 @@
   <p><strong>ID:</strong> <a href="">{{ player.osu_id }}</a></p> <!-- author detail link not yet defined -->
   <p><strong>Roles:</strong> {{ player.roles }}</p>
   <p><strong>Is staff:</strong> {{ player.is_staff }}</p>
-  <p><strong>Average of scores:</strong> {{ player_avg }}</p>
-  <p><strong>Test:</strong> {{ test }}</p>
+  <p><strong>DB Average of scores:</strong> {{ player.average_score }}</p>
+  <p><strong>Local Average of scores:</strong> {{ player_avg }}</p>
+  <p><strong>Score rank:</strong> {{ player.score_rank }}</p>
 
   <div style="margin-left:20px;margin-top:20px">
     <h4>Copies</h4>
