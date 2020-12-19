@@ -3,7 +3,7 @@ from django.db.models.functions import Rank, RowNumber
 
 from main.models import Player, Team, Map, Mappool
     
-def update_player_rankings():
+def update_rankings():
     #generate averages
     Player.objects.update( 
         average_score=Subquery( 
@@ -37,6 +37,29 @@ def update_player_rankings():
     for p in d:
         Player.objects.filter(osu_id=p.osu_id).update(score_rank=p.rank_s, acc_rank=p.rank_a, contrib_rank=p.rank_c)
 
+    #i don't know of a way to do the same as above in one db query without adding a "team" fk to Score
+    Team.objects.update( 
+        average_score=Subquery( 
+            Team.objects.filter( 
+                id=OuterRef('id') 
+            ).annotate( 
+                avg_score=Avg('scores__score') 
+            ).values('avg_score')[:1] 
+        ),
+        average_acc=Subquery( 
+            Team.objects.filter( 
+                id=OuterRef('id') 
+            ).annotate( 
+                avg_acc=Avg('scores__accuracy') 
+            ).values('avg_acc')[:1] 
+        )
+    )
+
+    trank_score = Window(expression=Rank(), order_by=F('average_score').desc())
+    trank_acc = Window(expression=Rank(), order_by=F('average_acc').desc())
+    f = Team.objects.filter().annotate(rank_s=trank_score, rank_a=trank_acc)
+    for t in f:
+        Team.objects.filter(id=t.id).update(score_rank=t.rank_s, acc_rank=t.rank_a)
 
     '''i suspect the reason as to why this doesn't work is because windows
     will be relative to the subqueries; it works above because the aggregation
@@ -83,9 +106,6 @@ def update_player_rankings():
     https://stackoverflow.com/questions/3652736/django-update-queryset-with-annotation
     https://stackoverflow.com/questions/35781669/clean-way-to-use-postgresql-window-functions-in-django-orm
     '''
-
-def update_team_rankings():
-    pass
 
 def update_player_osu_data():
     pass

@@ -48,6 +48,12 @@ class Player(models.Model):
         verbose_name="osu! pp",
         help_text="This user's osu! pp. Automated with rank updates."
     )
+    country_rank = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name="osu! rank",
+        help_text="This user's country rank. Updated ~daily-hourly via celery, shouldn't need to be manual."
+    )
 
     roles = models.ManyToManyField("Role", related_name="players", blank=True)
     is_staff = models.BooleanField(
@@ -101,6 +107,12 @@ class Player(models.Model):
     contrib_rank = models.IntegerField(
         blank=True,
         null=True
+    )
+    tournament_rank = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name="Tournament rank",
+        help_text="This user's tournament ranking, by pp. Updated ~daily-hourly via celery, shouldn't need to be manual."
     )
 
     #before scores exist, we sort by username on tables and refs
@@ -192,6 +204,10 @@ class Score(models.Model):
     #to keep influencing tournament statistics; same with a team or match
     #so cascade deletes this
     player = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='scores')
+    #i really didn't wnat to have this here since i wanted the Player model to be used for the team name
+    #but it just doesn't work with the ranking logic and what i intend to implement for the 
+    #filtering logic
+    team = models.ForeignKey('Team', on_delete=models.CASCADE, related_name='scores')
     match = models.ForeignKey('Match', on_delete=models.CASCADE, related_name='scores')
     match_index = models.IntegerField(help_text="The index of this score relative to the match, zero-indexed.")
     #maps should normally not be deleted; direct deletion of a map after scores have been added is not allowed
