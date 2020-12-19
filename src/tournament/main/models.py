@@ -366,6 +366,10 @@ class Map(models.Model):
         null=True
     )
 
+    #statistics (can't be determined from mp alone)
+    picks = models.IntegerField(default=0)
+    bans = models.IntegerField(default=0)
+
     class Meta:
         ordering = ['mappool', 'pool_id']
 
