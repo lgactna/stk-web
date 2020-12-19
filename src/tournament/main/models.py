@@ -69,7 +69,7 @@ class Player(models.Model):
 
     #in the future, we might make connections to a discord bot
     #but for now, we only store username#discriminator
-    discord_name = models.CharField(max_length=100, help_text="The player's Discord tag (with discriminator).")
+    discord_name = models.CharField(max_length=100, help_text="The player's Discord tag (with discriminator).", blank=True, null=True)
 
     #if a team is deleted, then this field is nulled
     #on a team instance, you would call team.players.all()
