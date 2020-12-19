@@ -80,6 +80,9 @@ class MapAdmin(admin.ModelAdmin):
         ('Pooling', {
             'fields': ('mappool', 'pool_id', 'map_type')
         }),
+        ('Statistics', {
+            'fields': ('picks', 'bans')
+        }),
         ('Meta values', {
             'fields': (('star_rating', 'duration'),
                        ('cs', 'ar', 'od', 'hp')),
