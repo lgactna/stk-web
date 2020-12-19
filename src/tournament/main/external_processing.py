@@ -3,7 +3,11 @@
 #i don't really want to deal with figuring out how to get data from google sheets in production yet
 #for now, the gsheets functionality is just for building a full db easier
 
+from main.models import Player, Team, Map, Mappool
+
 import os
+import requests
+from enum import IntFlag
 
 #since heroku has its own environment variables
 #if debug then load from main.env
@@ -11,6 +15,74 @@ if os.getenv("on_heroku") != "TRUE":
     from dotenv import load_dotenv
     load_dotenv(dotenv_path="main.env")
 
+api_key = os.getenv("osu_key")
+
+#this probably won't be used at all here but just in case
+class Mods(IntFlag):
+    """Enum of the osu! mods exposed by the API.
+    
+    Underscores used for n-key mods because variable naming restrictions."""
+    NM = 0,
+    NF = 1,
+    EZ = 2,
+    TD = 4,
+    HD = 8,
+    HR = 16,
+    SD = 32,
+    DT = 64,
+    RX = 128,
+    HT = 256,
+    NC = 512,
+    FL = 1024,
+    AT = 2048,
+    SO = 4096,
+    AP = 8192,
+    PF = 16384,
+    _4K = 32768,
+    _5K = 65536,
+    _6K = 131072,
+    _7K = 262144,
+    _8K = 524288,
+    FI = 1048576,
+    RD = 2097152,
+    CN = 4194304,
+    TP = 8388608,
+    _9K = 16777216,
+    CO = 33554432,
+    _1K = 67108864,
+    _3K = 134217728,
+    _2K = 268435456,
+    V2 = 536870912,
+    MR = 1073741824
+
+    def to_list(self):
+        """Returns a list of strings represented by this enumeration."""
+        mod_list = str(self).split("|")
+        mod_list[0] = mod_list[0].split("Mods.")[1]
+        return mod_list
+
+#warning: osu! api v1 assumed for all below
+def get_player_data(username):
+    """Return JSON response of get_user from the osu! API with the given username."""
+    #inherently works with either ID or username, ID preferred
+    resp = requests.get(f'https://osu.ppy.sh/api/get_user?k={api_key}&u={username}')
+    player_data = resp.json()
+    return player_data[0]
+
+def get_map_data(diff_id):
+    """Return JSON response of get_beatmaps from the osu! API with the given diff id."""
+    resp = requests.get(f'https://osu.ppy.sh/api/get_beatmaps?k={api_key}&b={diff_id}')
+    map_data = resp.json()
+    return map_data[0]
+
+def get_match_data(match_id):
+    """Return JSON response of get_beatmaps from the osu! API with the given diff id."""
+    resp = requests.get(f'https://osu.ppy.sh/api/get_match?k={api_key}&mp={match_id}')
+    match_data = resp.json()
+    return match_data
+
+#see https://www.geeksforgeeks.org/python-django-google-authentication-and-fetching-mails-from-scratch/
+#will probably need this later
 def get_all_gsheet_data(sheet_id):
     """Get data from Google Sheets."""
     #theoretically we'll need this practically never so imports occur here
@@ -36,8 +108,10 @@ def get_all_gsheet_data(sheet_id):
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
+            #https://stackoverflow.com/questions/42519991/django-not-recognizing-or-seeing-json-file
+            DIRNAME = os.path.dirname(__file__)
             flow = InstalledAppFlow.from_client_secrets_file(
-                'google-credentials.json', SCOPES)
+                os.path.join(DIRNAME, 'google-credentials.json'), SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
@@ -65,4 +139,33 @@ def get_all_gsheet_data(sheet_id):
 
     return output
 
-get_all_gsheet_data(os.getenv("sample_spreadsheet_target"))
+def create_players_and_teams(player_data):
+    """Create new player and team instances based on gsheet data."""
+    #teams need to be made first
+    #done by converting the first element of each gsheet row to a string and using that as the team name
+    #unfortunately this returns nothing and is too much of a pain to work with without the FKs
+    #Team.objects.bulk_create([Team(team_name=row[0]) for row in player_data])
+
+    for row in player_data:
+        team_name = row[0]
+        player_names = row[1:]
+        team = Team.objects.create(team_name=team_name)
+        for player_name in player_names:
+            player_data = get_player_data(player_name)
+            fields = {
+                'osu_id': player_data["user_id"],
+                'osu_name': player_data["username"],
+                'country': "Nowhere", #it's probably time to make a field lmao - https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+                'country_code': player_data["country"],
+                'osu_rank': player_data["pp_rank"],
+                'osu_pp': player_data["pp_raw"],
+                'country_rank': player_data["pp_country_rank"]
+            }
+            player = Player.objects.create(team=team, **fields)
+            #print(player)
+            #players.append(player)
+    #Player.objects.bulk_create(players)
+
+def add_all_from_gsheets(sheet_id):
+    data = get_all_gsheet_data(sheet_id)
+    create_players_and_teams(data['teams'])

@@ -5,6 +5,9 @@ from django.http import Http404
 
 from main.models import Player, Team, Map, Mappool
 from main.ranking import update_rankings
+from main.external_processing import add_all_from_gsheets
+
+import os
 
 #this can go to a celery task or other like services.py
 
@@ -17,7 +20,9 @@ def index(request):
     num_players = Player.objects.all().count()
 
     #obviously move this elsewhere later but see if works for now
-    update_rankings()
+    #update_rankings()
+
+    add_all_from_gsheets(os.getenv("sample_spreadsheet_target"))
 
     context = {
         'num_players': num_players,
