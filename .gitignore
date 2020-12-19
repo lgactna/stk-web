@@ -132,3 +132,4 @@ dmypy.json
 old_/
 google-credentials.json
 main.env
+token.pickle

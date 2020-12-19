@@ -1,7 +1,18 @@
 """Logic for retreiving and processing osu! API and Google Sheets data."""
 
-def a(sheet_id):
-    """Get data from Google Sheets. Spit out."""
+#i don't really want to deal with figuring out how to get data from google sheets in production yet
+#for now, the gsheets functionality is just for building a full db easier
+
+import os
+
+#since heroku has its own environment variables
+#if debug then load from main.env
+if os.getenv("on_heroku") != "TRUE":
+    from dotenv import load_dotenv
+    load_dotenv(dotenv_path="main.env")
+
+def get_all_gsheet_data(sheet_id):
+    """Get data from Google Sheets."""
     #theoretically we'll need this practically never so imports occur here
     #if we find a need to regularly rebuild databases from gsheets, then we can move this out
     import pickle
@@ -12,8 +23,6 @@ def a(sheet_id):
 
     # If modifying these scopes, delete the file token.pickle.
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-
-    # The ID and range of a sample spreadsheet.
 
     creds = None
     # The file token.pickle stores the user's access and refresh tokens, and is
@@ -28,7 +37,7 @@ def a(sheet_id):
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                'credentials.json', SCOPES)
+                'google-credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('token.pickle', 'wb') as token:
@@ -38,6 +47,8 @@ def a(sheet_id):
 
     # Call the Sheets API
     sheet = service.spreadsheets()
+
+    output = {}
 
     ranges = {
         'meta': 'meta!A2:B',
@@ -52,11 +63,6 @@ def a(sheet_id):
                                     range=range_name).execute()
         output[range_id] = result.get('values', [])
 
-        '''
-        print("for %s:"%range)
-        if not values:
-            print('No data found.')
-        else:
-            for row in values:
-                print(row)
-        '''
+    return output
+
+get_all_gsheet_data(os.getenv("sample_spreadsheet_target"))
