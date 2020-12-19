@@ -61,8 +61,8 @@ class Player(models.Model):
         verbose_name="Participating in tournament?",
         default=True)
     is_staff = models.BooleanField(
-        help_text="Whether this user is staffing or not. If false, disables staffing details on this user's page.",
-        verbose_name="Participating in tournament?",
+        help_text="Whether this user is a staff member or not.",
+        verbose_name="Player is staff?",
         default=False)
     utc_offset = models.IntegerField(
         default=0,
