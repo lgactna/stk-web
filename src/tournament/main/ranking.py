@@ -1,3 +1,5 @@
+"""Logic for updating Team and Player data."""
+
 from django.db.models import Avg, OuterRef, Subquery, F, Window
 from django.db.models.functions import Rank, RowNumber
 
