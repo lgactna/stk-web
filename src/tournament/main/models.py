@@ -56,9 +56,14 @@ class Player(models.Model):
     )
 
     roles = models.ManyToManyField("Role", related_name="players", blank=True)
+    is_player = models.BooleanField(
+        help_text="Whether this user is playing or not. If false, disables tournament statistics on this user's page.",
+        verbose_name="Participating in tournament?",
+        default=True)
     is_staff = models.BooleanField(
-        help_text="Whether this user is a staff member or not.",
-        verbose_name="Player is staff?")
+        help_text="Whether this user is staffing or not. If false, disables staffing details on this user's page.",
+        verbose_name="Participating in tournament?",
+        default=False)
     utc_offset = models.IntegerField(
         default=0,
         help_text="This player's UTC offset. If a player is UTC-8, put -8 here. "
