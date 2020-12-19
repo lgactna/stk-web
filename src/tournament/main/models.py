@@ -408,7 +408,8 @@ class Mappool(models.Model):
         help_text="The shorthand name for this mappool (as in SF, Ro32, etc.)")
     display_color = models.CharField(
         max_length=9,
-        help_text="RGBA hex (as #RRGGBBAA), webpage-compatible."
+        help_text="RGBA hex (as #RRGGBBAA), webpage-compatible.",
+        default="#FF000033" #max red, 0.2 alpha
     )
 
     class Meta:
