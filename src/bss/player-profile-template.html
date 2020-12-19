@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>tourney</title>
+    <title>tourney-repo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Exo+2">
@@ -42,11 +42,11 @@
             <div class="container">
                 <div class="white-links" style="background-color: rgba(0,0,0,0.52);padding: 15px;border-radius: 5px;">
                     <div class="row">
-                        <div class="col-12 col-lg-2 col-xl-2 d-flex justify-content-center align-items-center"><img class="rounded-circle" src="{{profile_url}}" style="height: 160px;"></div>
+                        <div class="col-12 col-lg-2 col-xl-2 d-flex justify-content-center align-items-center"><img class="rounded-circle" src="https://a.ppy.sh/{{ player.osu_id }}" style="height: 160px;width: 160px;"></div>
                         <div class="col-12 col-lg-6 col-xl-6 d-flex flex-column justify-content-center align-items-center align-items-lg-start align-items-xl-start">
-                            <h2 class="text-sm-left" style="margin-bottom: 0px;">{{ player.osu_name }}&nbsp;</h2><span style="margin-bottom: 10px;"><a href="#">{{ player.team.team_name}}</a> - {% for player in player.team.players %} <a href="{{ player.get_absolute_url}}"> {{player.osu_name}}, </a> {% endfor %}</span>
-                            <div class="d-flex align-items-xl-center" id="country-info"><img src="https://osu.ppy.sh/images/flags/{{ country_code }}.png" height="20px"><span style="padding-left: 10px;">{{ player.country }} -&nbsp;</span><span data-toggle="tooltip" data-bs-tooltip="" id="utc-value" title="This player is n hours behind you." style="text-decoration-style: dotted;text-decoration-line: underline;">UTC_value</span></div>
-                            <div id="extra-tags" style="margin-top: 15px;">{% for role in player.roles %}
+                            <h2 class="text-sm-left" style="margin-bottom: 0px;">{{ player.osu_name }}&nbsp;</h2><span style="margin-bottom: 10px;"><a href="#">{{ player.team.team_name}}</a> - {% for player in player.team.players.all %} <a href="{{ player.get_absolute_url}}"> {{player.osu_name}}, </a> {% endfor %}</span>
+                            <div class="d-flex align-items-xl-center" id="country-info"><img src="https://osu.ppy.sh/images/flags/{{ player.country_code }}.png" height="20px"><span style="padding-left: 10px;">{{ player.country }} -&nbsp;</span><span data-toggle="tooltip" data-bs-tooltip="" id="utc-value" title="This player is n hours behind you." style="text-decoration-style: dotted;text-decoration-line: underline;">UTC_value</span></div>
+                            <div id="extra-tags" style="margin-top: 15px;">{% for role in player.roles.all %}
 	<span class="badge badge-primary" style="background-color: {{ role.role_color }}"> {{ role.role_name }}</span>
 {% endfor %}</div>
                         </div>
@@ -63,7 +63,7 @@
                                                 <td class="link-cell"><a href="#">#{{ player.tournament_rank }}</a></td>
                                             </tr>
                                             <tr>
-                                                <td class="img-cell"><img data-toggle="tooltip" data-bs-tooltip="" data-placement="left" src="https://osu.ppy.sh/images/flags{{ player.country_code }}.png" height="20px" style="height: 23px;" title="Country Ranking"></td>
+                                                <td class="img-cell"><img data-toggle="tooltip" data-bs-tooltip="" data-placement="left" src="https://osu.ppy.sh/images/flags/{{ player.country_code }}.png" height="20px" style="height: 23px;" title="Country Ranking"></td>
                                                 <td class="link-cell"><a href="#">#{{ player.country_rank }}</a></td>
                                             </tr>
                                         </tbody>
