@@ -395,7 +395,7 @@ class Mappool(models.Model):
 
     display_order = models.IntegerField(
         help_text="What index this pool is, unique. Pools are ordered highest first.", 
-        primary_key=True)
+        default=-1)
     mappool_name = models.CharField(
         max_length=100,
         help_text="The full name of this mappool (as in Grand Finals).")
