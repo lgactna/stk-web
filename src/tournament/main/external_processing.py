@@ -15,6 +15,8 @@ if os.getenv("on_heroku") != "TRUE":
     from dotenv import load_dotenv
     load_dotenv(dotenv_path="main.env")
 
+#region osu! api
+
 api_key = os.getenv("osu_key")
 
 #this probably won't be used at all here but just in case
@@ -81,6 +83,10 @@ def get_match_data(match_id):
     match_data = resp.json()
     return match_data
 
+#endregion
+
+#region gsheets
+
 #see https://www.geeksforgeeks.org/python-django-google-authentication-and-fetching-mails-from-scratch/
 #will probably need this later
 def get_all_gsheet_data(sheet_id):
@@ -146,6 +152,7 @@ def create_players_and_teams(player_data):
     #unfortunately this returns nothing and is too much of a pain to work with without the FKs
     #Team.objects.bulk_create([Team(team_name=row[0]) for row in player_data])
 
+    #note: bulk-adding players might be an option but i won't implement rn
     for row in player_data:
         team_name = row[0]
         player_names = row[1:]
@@ -166,6 +173,52 @@ def create_players_and_teams(player_data):
             #players.append(player)
     #Player.objects.bulk_create(players)
 
+def create_pools_and_maps(pool_data):
+    current_pool_object = None
+    for row in pool_data:
+        if row[0] != '':
+            #this signifies that we are on a new mappool
+            #so we now we make another pool
+
+            #to maintain comaptibility with the bot's import function,
+            #the use of "END" is supported here
+            #the last "map" in a bulk add should always be ["END", ...]
+            if row[0] != "END":
+                metadata = row[0].split(", ")
+                fields = {
+                    'mappool_name':metadata[0],
+                    'short_name': metadata[1]
+                }
+                current_pool_object = Mappool.objects.create(**fields)
+            else:
+                #don't process this row, which is the last
+                break
+        #get and process map data
+        map_data = get_map_data(row[1])
+        #be aware that there are no extra calculations for mod values here
+        #(consider adding post-mod columns to gsheets?)
+        fields = {
+            'diff_id': map_data["beatmap_id"],
+            'set_id': map_data["beatmapset_id"],
+            'pool_id': row[3],
+            'map_type': row[2],
+            'artist': map_data["artist"],
+            'title': map_data["title"],
+            'diff_name': map_data['version'],
+            'creator': map_data["creator"],
+            'max_combo': map_data["max_combo"],
+            'star_rating': map_data["difficultyrating"],
+            'cs': map_data["diff_size"],
+            'ar': map_data["diff_approach"],
+            'od': map_data["diff_overall"],
+            'hp': map_data["diff_drain"],
+            'duration': map_data["total_length"]
+        }
+        Map.objects.create(mappool=current_pool_object, **fields)
+
 def add_all_from_gsheets(sheet_id):
     data = get_all_gsheet_data(sheet_id)
-    create_players_and_teams(data['teams'])
+    #create_players_and_teams(data['teams'])
+    create_pools_and_maps(data['pools'])
+
+#endregion
