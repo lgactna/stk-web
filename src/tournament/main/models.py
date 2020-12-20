@@ -226,6 +226,9 @@ class Score(models.Model):
     accuracy = models.DecimalField(max_digits=6, decimal_places=3) # ###.#######
     team_total = models.IntegerField(
         help_text="The sum of this player's score and their teammates' scores for this map on that match.")
+    score_difference = models.IntegerField(
+        help_text="The difference between this player's team's total score and the other team's total score. "
+                  "If negative, then it means this player lost that map.")
     contrib = models.DecimalField(max_digits=6, decimal_places=3)
     count_300 = models.IntegerField(verbose_name="300s")
     count_100 = models.IntegerField(verbose_name="100s")
