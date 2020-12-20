@@ -218,7 +218,7 @@ def create_pools_and_maps(pool_data):
 
 def add_all_from_gsheets(sheet_id):
     data = get_all_gsheet_data(sheet_id)
-    #create_players_and_teams(data['teams'])
+    create_players_and_teams(data['teams'])
     create_pools_and_maps(data['pools'])
 
 #endregion
