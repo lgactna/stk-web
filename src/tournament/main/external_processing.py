@@ -13,7 +13,7 @@ from enum import IntFlag
 #if debug then load from main.env
 if os.getenv("on_heroku") != "TRUE":
     from dotenv import load_dotenv
-    load_dotenv(dotenv_path="main.env")
+    load_dotenv(dotenv_path=".env")
 
 #region osu! api
 
