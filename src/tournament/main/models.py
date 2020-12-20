@@ -319,8 +319,8 @@ class Map(models.Model):
         verbose_name="HP",
         help_text="The map's HP drain.")
     duration = models.IntegerField(
-        verbose_name="Drain time",
-        help_text = "Map's drain time in seconds."
+        verbose_name="Total length",
+        help_text = "Map's duration in seconds, from first to last note (including breaks)"
     )
 
     #Alt, optional. Use if you need post-mod values to be shown.
