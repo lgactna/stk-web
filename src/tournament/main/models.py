@@ -370,8 +370,8 @@ class Map(models.Model):
     )
 
     #statistics (can't be determined from mp alone)
-    picks = models.IntegerField(default=0)
-    bans = models.IntegerField(default=0)
+    pick_count = models.IntegerField(default=0)
+    ban_count = models.IntegerField(default=0)
 
     class Meta:
         ordering = ['mappool', 'pool_id']
@@ -448,6 +448,7 @@ class Match(models.Model):
     team_2 = models.ForeignKey("Team", related_name='matches_2', on_delete=models.SET_NULL, null=True)
     score_1 = models.IntegerField(verbose_name='Team 1 Score', blank=True, null=True)
     score_2 = models.IntegerField(verbose_name='Team 2 Score', blank=True, null=True)
+    bans = models.ManyToManyField("Map", related_name="bans", blank=True)
     utc_time = models.DateTimeField(verbose_name="UTC Time", blank=True, null=True)
     referee = models.ForeignKey("Player", related_name="reffed_matches", on_delete=models.SET_NULL, null=True, blank=True)
     streamer = models.ForeignKey("Player", related_name="streamed_matches", on_delete=models.SET_NULL, null=True, blank=True)
