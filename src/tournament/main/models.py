@@ -445,8 +445,8 @@ class Match(models.Model):
     #matches shouldn't die if a team is deleted, so this is nullable
     #also, related_names are unique columns in a db and so have to be different. we'll just query for both and join when needed.
     team_1 = models.ForeignKey("Team", related_name='matches_1', on_delete=models.SET_NULL, null=True)
-    team_2 = models.ForeignKey("Team", related_name='matches_2', on_delete=models.SET_NULL, null=True)
-    score_1 = models.IntegerField(verbose_name='Team 1 Score', blank=True, null=True)
+    team_2 = models.ForeignKey("Team", related_name='matches_2', on_delete=models.SET_NULL, null=True,)
+    score_1 = models.IntegerField(verbose_name='Team 1 Score', blank=True, null=True) #-1 = forfeit
     score_2 = models.IntegerField(verbose_name='Team 2 Score', blank=True, null=True)
     bans = models.ManyToManyField("Map", related_name="bans", blank=True)
     utc_time = models.DateTimeField(verbose_name="UTC Time", blank=True, null=True)

@@ -460,7 +460,15 @@ def create_match_from_import(api_match_data, match_id, stage):
                     continue
         if team_1_check and team_2_check:
             #print(f"mp/{api_match_data['match']['match_id']}: {team_1.team_name}vs.{team_2.team_name}")
-            return Match.objects.create(match_id=match_id, team_1=team_1, team_2=team_2, stage=stage)
+            fields = {
+                'match_id': match_id,
+                'team_1': team_1,
+                'team_2': team_2,
+                'stage': stage,
+                'score_1': 0,
+                'score_2': 0
+            }
+            return Match.objects.create(**fields)
     return None
 
 def create_stages(match_data):
@@ -503,6 +511,37 @@ def create_matches(match_data):
             if processed == None:
                 continue
             player_id_cache = processed["player_ids"] #update the player id cache
+
+            #check to see who gets the point
+            #note that this is slightly off - the intent of an import is just to figure out who won the match lol
+            #we can implement better support for this if needed, or just have manual score fixes everywhere
+            check_score = processed["individual_scores"][0]
+            check_player = Player.objects.get(osu_id=check_score["user_id"])
+
+            #because of compatibility
+            winner_dict = {
+                "Blue": "1",
+                "Red": "2"
+            }
+
+            #print(f"processed[winner] = {processed['winner']}, check_score[team] = {check_score['team']}")
+            if winner_dict[processed["winner"]] == check_score["team"]:
+                #then this team gets the point
+                if check_player.team == match.team_1:
+                    match.score_1 += 1
+                else:
+                    match.score_2 += 1 
+            else:
+                #then the other gets the point
+                if check_player.team == match.team_1:
+                    match.score_2 += 1
+                else:
+                    match.score_1 += 1
+            #print(f"match.score_1 = {match.score_1}")
+            #print(f"match.score_2 = {match.score_2}")
+           
+
+            #get map
             try:
                 #a single "map" is part of a "game"
                 game_map = Map.objects.get(diff_id=processed["diff_id"])
@@ -534,23 +573,24 @@ def create_matches(match_data):
                     "map": game_map,
                     "score": score["score"],
                     "combo": score["combo"],
-                    "accuracy":score["accuracy"],
+                    "accuracy":score["accuracy"]*100, #not in the domain [0,1] but [0,100]
                     "team_total": processed["team_1_score"] if score["team"]==1 else processed["team_2_score"],
                     "score_difference": processed["score_difference"] if processed["winner"] == score["team"] else -(processed["score_difference"]),
-                    "contrib": score["score"]/processed["team_1_score"] if score["team"] == "1" else score["score"]/processed["team_2_score"],
+                    "contrib": (score["score"]/processed["team_1_score"])*100 if score["team"] == "1" else (score["score"]/processed["team_2_score"])*100,
                     "count_300": score["hits"]["300_count"],
                     "count_100": score["hits"]["100_count"],
                     "count_50": score["hits"]["50_count"],
                     "count_miss": score["hits"]["miss_count"],
                 }
                 scores.append(Score(**fields))
+            match.save()
     Score.objects.bulk_create(scores)
 
 def add_all_from_gsheets(sheet_id):
     data = get_all_gsheet_data(sheet_id)
-    create_players_and_teams(data['teams'])
-    create_pools_and_maps(data['pools'])
-    create_stages(data['matches'])
+    #create_players_and_teams(data['teams'])
+    #create_pools_and_maps(data['pools'])
+    #create_stages(data['matches'])
     create_matches(data['matches'])
 
 #endregion
